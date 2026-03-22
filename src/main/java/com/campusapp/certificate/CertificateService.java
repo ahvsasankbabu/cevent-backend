@@ -270,14 +270,15 @@ public class CertificateService {
     }
 
     private CertificateTemplate getTemplate(Event event) {
-        Optional<CertificateTemplate> eventTemplate = templateRepository
-                .findByEventAndActiveTrue(event);
-        if (eventTemplate.isPresent()) return eventTemplate.get();
+        List<CertificateTemplate> eventTemplates = templateRepository
+                .findByEventAndActiveTrueOrderByIdDesc(event);
+        if (!eventTemplates.isEmpty()) return eventTemplates.get(0);
 
-        return templateRepository
-                .findByFestAndScopeAndActiveTrue(event.getFest(), TemplateScope.FEST)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "No certificate template found for this event"));
+        List<CertificateTemplate> festTemplates = templateRepository
+                .findByFestAndScopeAndActiveTrueOrderByIdDesc(event.getFest(), TemplateScope.FEST);
+        if (!festTemplates.isEmpty()) return festTemplates.get(0);
+
+        throw new ResourceNotFoundException("No certificate template found for this event");
     }
 
     private String generateCertificateFromPdf(CertificateTemplate template,
@@ -423,5 +424,9 @@ public class CertificateService {
                 certificate.getStatus(),
                 certificate.getIssuedAt()
         );
+    }
+    public Certificate getCertificateByIdRaw(String certificateId) {
+        return certificateRepository.findByCertificateId(certificateId)
+                .orElseThrow(() -> new ResourceNotFoundException("Certificate not found"));
     }
 }

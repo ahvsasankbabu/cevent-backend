@@ -120,4 +120,25 @@ public class CertificateController {
         return ResponseEntity.ok(
                 ApiResponse.success("Certificates fetched", responses));
     }
+    
+    @GetMapping("/download/{certificateId}")
+    public ResponseEntity<org.springframework.core.io.Resource> downloadCertificate(
+            @PathVariable String certificateId) throws java.io.IOException {
+        com.campusapp.certificate.Certificate cert = certificateService
+                .getCertificateByIdRaw(certificateId);
+        
+        java.nio.file.Path path = java.nio.file.Paths.get(cert.getCertificatePath());
+        org.springframework.core.io.Resource resource = 
+                new org.springframework.core.io.FileSystemResource(path);
+        
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok()
+                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=\"" + certificateId + ".pdf\"")
+                .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                .body(resource);
+    }
 }

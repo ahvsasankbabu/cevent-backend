@@ -34,18 +34,20 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/health").permitAll()
-                .requestMatchers("/api/v1/college/all").permitAll()
-                .requestMatchers("/api/v1/events/fests").permitAll()
-                .requestMatchers("/api/v1/events/fest/**").permitAll()
-                .requestMatchers("/api/v1/search/**").permitAll()
-                .requestMatchers("/api/v1/certificates/verify/**").permitAll()
-                .requestMatchers("/api/v1/payments/slot-status/**").permitAll()
-                .anyRequest().authenticated())
-            .addFilterBefore(jwtAuthFilter,
-                UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+            		.requestMatchers("/api/v1/auth/**").permitAll()
+            		.requestMatchers("/api/v1/health").permitAll()
+            		.requestMatchers("/api/v1/college/all").permitAll()
+            		.requestMatchers("/api/v1/events/fests").permitAll()
+            		.requestMatchers("/api/v1/events/fest/**").permitAll()
+            		.requestMatchers("/api/v1/search/**").permitAll()
+            		.requestMatchers("/api/v1/certificates/verify/**").permitAll()
+            		.requestMatchers("/api/v1/certificates/download/**").permitAll()
+            		.requestMatchers("/api/v1/payments/slot-status/**").permitAll()
+            		.requestMatchers("/uploads/**").permitAll()
+            		.anyRequest().authenticated())
+            	.addFilterBefore(jwtAuthFilter,
+            	    UsernamePasswordAuthenticationFilter.class);
+            	return http.build();
     }
 
     @Bean
