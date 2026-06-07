@@ -399,7 +399,7 @@ public class CertificateService {
 
     private String generateQRCode(String certId)
             throws WriterException, IOException {
-        String verificationUrl = "http://localhost:8080/api/v1/certificates/verify/"
+        String verificationUrl = "https://cevent-backend-2.onrender.com/api/v1/certificates/verify/"
                 + certId;
         QRCodeWriter qrWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrWriter.encode(verificationUrl,
